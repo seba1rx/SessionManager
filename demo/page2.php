@@ -67,7 +67,7 @@
                     alert(validationResponse.msg);
                     /**
                      * in a propper system, content would be updated here,
-                     * but for the sake of tis demo, we will just reload
+                     * but for the sake of this demo, we will just reload
                      */
                     location.reload();
                 }else{
