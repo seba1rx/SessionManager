@@ -38,7 +38,7 @@ if(
     $rxSessionAdmin->createUserSession($data['id']);
 
     /**
-     * since $_SESSION is open, there is no poin in encapsulating the data with get and set...
+     * since $_SESSION is open, there is no point in encapsulating the data with get and set...
      * lets add the data to SESSION['data']
      */
     foreach($data AS $dataName => $dataValue){
