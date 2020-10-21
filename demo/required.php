@@ -2,7 +2,7 @@
 
 require('../src/sessionAdmin.php');
 
-use rx\SessionAdmin;
+use Rx\SessionAdmin;
 
 $rxSessionAdmin = new SessionAdmin();
 $rxSessionAdmin->activateSession();
