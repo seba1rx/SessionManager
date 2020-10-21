@@ -1,0 +1,16 @@
+{
+    "name": "seba1rx/sessionadmin",
+    "description": "php session admin featuring url control and security against hijicking",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sebastian Basilio",
+            "email": "sebastian.basilio.a@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php":  "^7.1"
+    }
+}
