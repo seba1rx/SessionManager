@@ -1,7 +1,7 @@
 # SessionManager
 Simple PHP session manager implementing security against hijicking
 
-Requires PHP v7
+Requires PHP 7
 
 Usage:
 
