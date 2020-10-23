@@ -15,7 +15,7 @@ On each PHP page, call `activateSession()` method as you would with `session_sta
 example:
 
 ```
-use rx\SessionAdmin;
+use Rx\SessionAdmin;
 $rxSessionAdmin = new SessionAdmin();
 $rxSessionAdmin->activateSession();
 ```
