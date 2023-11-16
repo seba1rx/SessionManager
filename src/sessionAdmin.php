@@ -13,9 +13,13 @@ final class SessionAdmin{
     private $sessionName = 'demo_Session';
     private $breadcrumbs = array();
     private $stuff = array();
-    private $allowedUrls = array('index.php','page2.php');
+    private $allowedUrls = array('index.php');
 
-    public function __constructor(){}
+    public function __constructor(array $allowed){
+        foreach($allowed as $page){
+            $this->allowedUrls[] = $page;
+        }
+    }
     
     /**
      * fn activateSession:
