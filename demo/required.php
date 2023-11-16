@@ -4,7 +4,8 @@ require('../src/sessionAdmin.php');
 
 use Rx\SessionAdmin;
 
-$rxSessionAdmin = new SessionAdmin();
+$allowedForGests = ['page2.php'];
+$rxSessionAdmin = new SessionAdmin($allowedForGests);
 $rxSessionAdmin->activateSession();
 
 /**
