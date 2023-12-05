@@ -2,7 +2,10 @@
 
 namespace Rx;
 
-final class SessionAdmin{
+/**
+ * extend this class to customize it by overriding methods or use it as is
+ */
+class SessionAdmin{
 
     const IP_REGEX = '/(\d{1,3}\.\d{1,3}\.\d{1,3}\.)(\d{1,3})/';
     private static $sessionLifetime = 2400;
@@ -11,16 +14,55 @@ final class SessionAdmin{
     private $secure = NULL;
     private $uniqueId;
     private $sessionName = 'demo_Session';
-    private $breadcrumbs = array();
-    private $stuff = array();
-    private $allowedUrls = array('index.php');
+    private $breadcrumbs = [];
+    private $allowedUrls = ['index.php'];
+    private $keys = [];
 
-    public function __constructor(array $allowed){
-        foreach($allowed as $page){
-            $this->allowedUrls[] = $page;
+    /**
+     * The first page to instantiate this class can pass an array to setup the object.
+     *
+     * usage demo:
+     * $conf = [
+     *     "sessionLifetime" => 3600,
+     *     "sessionName" => "myAppName_",
+     *     "allowedURLs" => ["index.php", "legal.php", "contact_us.php", "our_history.php", "products_and_plans.php"],
+     *     "keys" => [
+     *         // "some_key" => "some_value",
+     *         // "foo" => "bar",
+     *     ],
+     * ];
+     * $sessionAdmin = new SessionAdmin($conf);
+     * $sessionAdmin->activateSession(); // this is like session_start()
+     *
+     * @param array $conf
+     */
+    public function __construct(array $conf = []){
+        if(isset($conf["sessionLifetime"])){
+            $this->sessionLifetime = $conf["sessionLifetime"];
+        }
+
+        if(isset($conf["sessionName"])){
+            $this->sessionName = $conf["sessionName"];
+        }
+
+        if(isset($conf["allowedURLs"])){
+            foreach($conf["allowedURLs"] as $page){
+                $this->allowedUrls[] = $page;
+            }
+        }
+
+        if(isset($conf["keys"])){
+            foreach($conf["keys"] as $key => $value){
+                $this->keys[$key] = $value;
+            }
         }
     }
-    
+    // public function __constructor(array $allowed){
+    //     foreach($allowed as $page){
+    //         $this->allowedUrls[] = $page;
+    //     }
+    // }
+
     /**
      * fn activateSession:
      * starts a new session as guest or renewes user session if $_SESSION['uniqueId'] is set
@@ -31,7 +73,7 @@ final class SessionAdmin{
         $this->setSessionTime();
         session_start();
         $this->setSessionTimeStamps();
-        
+
         if(isset($_SESSION['uniqueId'])){
             # user
             $this->checkTime();
@@ -42,7 +84,7 @@ final class SessionAdmin{
 
         $this->checkIfUrlIsAllowed();
     }
-    
+
     /**
      * fn configureGuestSession:
      * configure $_SESSION with guest data which is the minimum data to use the website
@@ -53,46 +95,38 @@ final class SessionAdmin{
         if(isset($_SESSION['breadcrumbs'])){
             $this->breadcrumbs = $_SESSION['breadcrumbs'];
         }
-        
 
-        if(isset($_SESSION['stuff']) && count($_SESSION['stuff'])>0){
-            foreach($_SESSION['stuff'] AS $stuffName => $stuffValue){
-                $this->stuff[$stuffName] = $stuffValue;
-            }
-        }
-        
         // setting / resetting session
-        $_SESSION = array();
+        $_SESSION = [];
         $_SESSION['isUser'] = FALSE;
         $_SESSION['msg'] = 'you are a guest';
         $_SESSION['allowedUrl'] = $this->allowedUrls;
         $_SESSION['breadcrumbs'] = $this->breadcrumbs;
-        $_SESSION['stuff'] = $this->stuff;
         $_SESSION['urlIsAllowedToLoad'] = FALSE; // by default
     }
 
     /**
      * fn createUserSession:
      * adds user data to SESSION and sets time
-     * @param int id_user
+     * @param int $id_user
      */
     public function createUserSession(int $id_user): void
     {
         $this->uniqueId = base_convert(microtime(false), 10, 36);
-        
+
         $_SESSION['isUser'] = TRUE;
         $_SESSION['msg'] = 'you are a user';
         $_SESSION['uniqueId'] = $this->uniqueId;
         $_SESSION['id_user'] = $id_user;
         $_SESSION['urlIsAllowedToLoad'] = FALSE;
-        
+
         $this->setSessionTime();
         $this->setSessionTimeStamps();
     }
 
     /**
      * fn preparesDomainAndSecureVars
-     * Set the domain to current domain if not set 
+     * Set the domain to current domain if not set
      * Set the secure value to whether the site is being accessed with SSL
      * @return void
      */
@@ -113,7 +147,7 @@ final class SessionAdmin{
         if (isset($_COOKIE[$this->sessionName])){
             setcookie($this->sessionName, $_COOKIE[$this->sessionName], time() + self::$sessionLifetime, "/");
         }
-        
+
         // sets expiry time (when creating session only)
         if(!isset($_SESSION)) {
             $this->preparesDomainAndSecureVars();
@@ -121,7 +155,7 @@ final class SessionAdmin{
             ini_set('session.gc_maxlifetime',(string)self::$sessionLifetime);
         }
     }
-    
+
     /**
      * fn setSessionTimeStamps:
      * sets session time vars used to calculate whether request is obsolete
@@ -135,9 +169,9 @@ final class SessionAdmin{
             $previous = $_SESSION['time_atRequest'];
         }
         $_SESSION['time_atRequest'] = $time;
-        $_SESSION['time_sinceLastRequest'] = $time - $previous; 
+        $_SESSION['time_sinceLastRequest'] = $time - $previous;
     }
-    
+
     /**
      * fn requestIsObsolete
      * @return bool true if request is obsolete
@@ -158,7 +192,7 @@ final class SessionAdmin{
         if($this->requestIsObsolete()){
             $this->destroySession();
         }else{
-            
+
             if ($this->requestIsHijackingAttempt()) {
 
                 // Reset session data and regenerate id
@@ -173,7 +207,7 @@ final class SessionAdmin{
             }
         }
     }
-    
+
     /**
      * fn destroySession:
      * clears $_SESSION, destroys current session, and calls to start new session as guest
@@ -181,7 +215,7 @@ final class SessionAdmin{
     private function destroySession(): void
     {
         if(isset($_SESSION)){
-            $_SESSION = array();
+            $_SESSION = [];
             session_write_close();
             session_destroy();
             $this->activateSession();
@@ -250,11 +284,11 @@ final class SessionAdmin{
     {
         // Create new session without destroying the old one
         session_regenerate_id(false);
-        
+
         // Grab current session ID and close both sessions to allow other scripts to use them
         $newSession = session_id();
         session_write_close();
-        
+
         // Set session ID to the new one, and start it back up again
         session_id($newSession);
         session_start();
@@ -286,7 +320,7 @@ final class SessionAdmin{
             return $mainString;
         }
     }
-    
+
     /**
      * fn strrevpos
      * use strrevpos function in case your php version does not include it
