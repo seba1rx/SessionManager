@@ -1,14 +1,23 @@
 <?php
 
-require('../src/sessionAdmin.php');
+require('../vendor/autoload.php');
 
-use Rx\SessionAdmin;
+use Seba1rx\MySessionAdmin;
 
-$rxSessionAdmin = new SessionAdmin();
+$rxSessionAdmin = new MySessionAdmin(
+    [
+        "sessionLifetime" => 3600,
+        "allowedURLs" => ["index.php", "page2.php"],
+        "keys" => [
+            "some_key" => "some_value",
+            "foo" => "bar",
+        ],
+   ]
+);
 $rxSessionAdmin->activateSession();
 
 /**
- * this scripts simulates an authentication, you should implement your own validation 
+ * this scripts simulates an authentication, you should implement your own validation
  */
 
 $validationResponse = array(
@@ -25,15 +34,15 @@ if(
         'id' => 123,
         'name' => 'Sebastian',
         'nickname' => 'seba1rx',
-        'avatar' => 'https://thumbs.gfycat.com/BouncyWelcomeGrassspider-max-1mb.gif',
+        'avatar' => 'cat-space.gif',
         'birthDate' => '1985-05-21',
         'country' => 'Chile',
         'email' => $_POST['useremail'],
     );
 
-    /** 
+    /**
      * up to now we are in guest mode...
-     * lets call the method to create the user session 
+     * lets call the method to create the user session
      */
     $rxSessionAdmin->createUserSession($data['id']);
 
@@ -45,9 +54,9 @@ if(
         $_SESSION['data'][$dataName] = $dataValue;
     }
 
-    // here you woud iterate to add allowed urls according to assigned profile 
+    // here you woud iterate to add allowed urls according to assigned profile
     // foreach($ProfileAllowedUrls AS $url){
-    //    $_SESSION['allowedUrl'][] = $url;   
+    //    $_SESSION['allowedUrl'][] = $url;
     // }
 
     $validationResponse['ok'] = true;

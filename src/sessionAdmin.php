@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Rx;
+namespace Seba1rx;
 
 /**
  * extend this class to customize it by overriding methods or use it as is
@@ -8,60 +8,32 @@ namespace Rx;
 class SessionAdmin{
 
     const IP_REGEX = '/(\d{1,3}\.\d{1,3}\.\d{1,3}\.)(\d{1,3})/';
-    private static $sessionLifetime = 2400;
-    private static $path = '/';
+    protected $sessionLifetime = 2400;
+    protected $sessionName = 'SESSION';
+    protected $allowedUrls = ['index.php'];
+    protected $keys = [];
+    private $path = '/';
     private $domain = NULL;
     private $secure = NULL;
     private $uniqueId;
-    private $sessionName = 'demo_Session';
     private $breadcrumbs = [];
-    private $allowedUrls = ['index.php'];
-    private $keys = [];
 
     /**
+     * Extend this class and define the constructor as you want to implement this class.
      * The first page to instantiate this class can pass an array to setup the object.
      *
-     * usage demo:
-     * $conf = [
-     *     "sessionLifetime" => 3600,
-     *     "sessionName" => "myAppName_",
-     *     "allowedURLs" => ["index.php", "legal.php", "contact_us.php", "our_history.php", "products_and_plans.php"],
-     *     "keys" => [
-     *         // "some_key" => "some_value",
-     *         // "foo" => "bar",
-     *     ],
-     * ];
-     * $sessionAdmin = new SessionAdmin($conf);
+     * $sessionAdmin = \Seba1rx\SessionAdmin(
+     *     [
+     *          "sessionLifetime" => 3600,
+     *          "allowedURLs" => ["index.php", "legal.php", "contact_us.php", "our_history.php", "products_and_plans.php"],
+     *          "keys" => [
+     *              "some_key" => "some_value",
+     *              "foo" => "bar",
+     *          ],
+     *     ]
+     * );
      * $sessionAdmin->activateSession(); // this is like session_start()
-     *
-     * @param array $conf
      */
-    public function __construct(array $conf = []){
-        if(isset($conf["sessionLifetime"])){
-            $this->sessionLifetime = $conf["sessionLifetime"];
-        }
-
-        if(isset($conf["sessionName"])){
-            $this->sessionName = $conf["sessionName"];
-        }
-
-        if(isset($conf["allowedURLs"])){
-            foreach($conf["allowedURLs"] as $page){
-                $this->allowedUrls[] = $page;
-            }
-        }
-
-        if(isset($conf["keys"])){
-            foreach($conf["keys"] as $key => $value){
-                $this->keys[$key] = $value;
-            }
-        }
-    }
-    // public function __constructor(array $allowed){
-    //     foreach($allowed as $page){
-    //         $this->allowedUrls[] = $page;
-    //     }
-    // }
 
     /**
      * fn activateSession:
@@ -83,6 +55,31 @@ class SessionAdmin{
         }
 
         $this->checkIfUrlIsAllowed();
+
+        foreach($this->keys as $key => $item){
+            if(!isset($_SESSION[$key])){
+                $_SESSION[$key] = $item;
+            }
+        }
+    }
+
+    /**
+     * fn createUserSession:
+     * adds user data to SESSION and sets time
+     * @param int $id_user
+     */
+    public function createUserSession(int $id_user): void
+    {
+        $this->uniqueId = base_convert(microtime(false), 10, 36);
+
+        $_SESSION['isUser'] = TRUE;
+        $_SESSION['msg'] = 'you are a user';
+        $_SESSION['uniqueId'] = $this->uniqueId;
+        $_SESSION['id_user'] = $id_user;
+        $_SESSION['urlIsAllowedToLoad'] = FALSE;
+
+        $this->setSessionTime();
+        $this->setSessionTimeStamps();
     }
 
     /**
@@ -106,25 +103,6 @@ class SessionAdmin{
     }
 
     /**
-     * fn createUserSession:
-     * adds user data to SESSION and sets time
-     * @param int $id_user
-     */
-    public function createUserSession(int $id_user): void
-    {
-        $this->uniqueId = base_convert(microtime(false), 10, 36);
-
-        $_SESSION['isUser'] = TRUE;
-        $_SESSION['msg'] = 'you are a user';
-        $_SESSION['uniqueId'] = $this->uniqueId;
-        $_SESSION['id_user'] = $id_user;
-        $_SESSION['urlIsAllowedToLoad'] = FALSE;
-
-        $this->setSessionTime();
-        $this->setSessionTimeStamps();
-    }
-
-    /**
      * fn preparesDomainAndSecureVars
      * Set the domain to current domain if not set
      * Set the secure value to whether the site is being accessed with SSL
@@ -143,16 +121,16 @@ class SessionAdmin{
      */
     private function setSessionTime(): void
     {
-        // refresh expiry time of session
+        // refresh expire time of session
         if (isset($_COOKIE[$this->sessionName])){
-            setcookie($this->sessionName, $_COOKIE[$this->sessionName], time() + self::$sessionLifetime, "/");
+            setcookie($this->sessionName, $_COOKIE[$this->sessionName], time() + $this->sessionLifetime, "/");
         }
 
-        // sets expiry time (when creating session only)
+        // sets expire time (when creating session only)
         if(!isset($_SESSION)) {
             $this->preparesDomainAndSecureVars();
-            session_set_cookie_params(self::$sessionLifetime, self::$path, $this->domain, $this->secure, true);
-            ini_set('session.gc_maxlifetime',(string)self::$sessionLifetime);
+            session_set_cookie_params($this->sessionLifetime, $this->path, $this->domain, $this->secure, true);
+            ini_set('session.gc_maxlifetime',(string)$this->sessionLifetime);
         }
     }
 
@@ -178,7 +156,7 @@ class SessionAdmin{
      */
     private function requestIsObsolete(): bool
     {
-        return ($_SESSION['time_sinceLastRequest'] > self::$sessionLifetime ? TRUE : FALSE);
+        return ($_SESSION['time_sinceLastRequest'] > $this->sessionLifetime ? TRUE : FALSE);
     }
 
     /**

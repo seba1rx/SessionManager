@@ -6,12 +6,12 @@
     "authors": [
         {
             "name": "Sebastian Basilio",
-            "email": "sebastian.basilio.a@gmail.com"
+            "email": "seba1rx@gmail.com"
         }
     ],
     "autoload": {
         "psr-4": {
-            "Rx\\": "src/"
+            "Seba1rx\\": "src/"
         }
     }
 }

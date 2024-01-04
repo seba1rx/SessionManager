@@ -8,10 +8,10 @@
     <div class="wrapper p-5">
         <div class="row mt-5 justify-content-center">
             <div class="col-lg-8 col-sm-10 <?php echo ($_SESSION['urlIsAllowedToLoad']? 'bg-info': 'bg-danger'); ?> text-center">
-                <h3>Public content</h3>
+                <h3>Public content, you are in index.php</h3>
                 <p>Anyone can see this content, you are in index.php</p>
 
-                <?php if($_SESSION['isUser']){ ?>  
+                <?php if($_SESSION['isUser']){ ?>
                 <img src="<?php echo $_SESSION['data']['avatar']; ?>" alt="avatar" style="max-width: 100px;" class="img-thumbnail mb-1 bg-info">
                 <?php } ?>
 
@@ -28,7 +28,14 @@
                             <li><a href="private.php">private.php</a> -> private</li>
                         </dd>
 
-                        <?php if($_SESSION['isUser']){ ?>  
+                        <p>
+                            If you are a guest and click on private.php in the menu, you won't be able to load it and will be sent to index
+                        </p>
+                        <p>
+                            To log in, go to page2.php
+                        </p>
+
+                        <?php if($_SESSION['isUser']){ ?>
                         <a href="exit.php" class="btn btn-success mt-2">Log out</a>
                         <?php } ?>
 

@@ -8,12 +8,12 @@
     <div class="wrapper p-5">
         <div class="row mt-5 justify-content-center">
             <div class="col-lg-8 col-sm-10 <?php echo ($_SESSION['urlIsAllowedToLoad']? 'bg-info': 'bg-danger'); ?> text-center">
-                <h3>Private content</h3>
+                <h3>Private content, you are in private.php</h3>
                 <p>you are in private.php</p>
-                
+
                 <p><?php echo ($_SESSION['urlIsAllowedToLoad']? '': 'You have disabled the validation in required.php'); ?></p>
-            
-                <?php if($_SESSION['isUser']){ ?>  
+
+                <?php if($_SESSION['isUser']){ ?>
                 <img src="<?php echo $_SESSION['data']['avatar']; ?>" alt="avatar" style="max-width: 100px;" class="img-thumbnail mb-1 bg-info">
                 <?php } ?>
 
@@ -30,7 +30,11 @@
                             <li><a href="private.php">private.php</a> -> private</li>
                         </dd>
 
-                        <?php if($_SESSION['isUser']){ ?>  
+                        <span>
+                            you did it! it means you are a user and not a guest.
+                        </span>
+
+                        <?php if($_SESSION['isUser']){ ?>
                         <a href="exit.php" class="btn btn-success mt-2">Log out</a>
                         <?php } ?>
 
