@@ -7,7 +7,7 @@
 <body>
     <div class="wrapper p-5">
         <div class="row mt-5 justify-content-center">
-            <div class="col-lg-8 col-sm-10 <?php echo ($_SESSION['urlIsAllowedToLoad']? 'bg-info': 'bg-danger'); ?> text-center">
+            <div class="col-lg-8 col-sm-10 <?php echo ($_SESSION['urlIsAllowedToLoad']? 'bg-info': 'bg-danger'); ?> text-center text-white">
                 <h3>Private content, you are in private.php</h3>
                 <p>you are in private.php</p>
 
@@ -33,6 +33,8 @@
                         <span>
                             you did it! it means you are a user and not a guest.
                         </span>
+
+                        <br>
 
                         <?php if($_SESSION['isUser']){ ?>
                         <a href="exit.php" class="btn btn-success mt-2">Log out</a>

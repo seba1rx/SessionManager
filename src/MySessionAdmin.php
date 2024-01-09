@@ -6,6 +6,11 @@ class MySessionAdmin extends SessionAdmin{
 
     public function __construct(array $conf = []){
 
+        /**
+         * if you are going to use a session name,
+         * you will need to destroy it by using the name,
+         * see exitp.php in the demo
+         */
         $this->sessionName = "SuperDuperSessionName";
 
         if(isset($conf["sessionLifetime"])){
@@ -14,7 +19,9 @@ class MySessionAdmin extends SessionAdmin{
 
         if(isset($conf["allowedURLs"])){
             foreach($conf["allowedURLs"] as $page){
-                $this->allowedUrls[] = $page;
+                if(!in_array($page, $this->allowedUrls)){
+                    $this->allowedUrls[] = $page;
+                }
             }
         }
 

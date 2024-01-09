@@ -7,7 +7,7 @@
 <body>
     <div class="wrapper p-5">
         <div class="row mt-5 justify-content-center">
-            <div class="col-lg-8 col-sm-10 <?php echo ($_SESSION['urlIsAllowedToLoad']? 'bg-info': 'bg-danger'); ?> text-center">
+            <div class="col-lg-8 col-sm-10 <?php echo ($_SESSION['urlIsAllowedToLoad']? 'bg-info': 'bg-danger'); ?> text-center text-white">
                 <h3>Public content, you are in index.php</h3>
                 <p>Anyone can see this content, you are in index.php</p>
 
@@ -34,6 +34,8 @@
                         <p>
                             To log in, go to page2.php
                         </p>
+
+                        <br>
 
                         <?php if($_SESSION['isUser']){ ?>
                         <a href="exit.php" class="btn btn-success mt-2">Log out</a>

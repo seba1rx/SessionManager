@@ -54,10 +54,15 @@ if(
         $_SESSION['data'][$dataName] = $dataValue;
     }
 
+    $ProfileAllowedUrls = [
+        "private.php",
+        //"some_other.php",
+    ];
+
     // here you woud iterate to add allowed urls according to assigned profile
-    // foreach($ProfileAllowedUrls AS $url){
-    //    $_SESSION['allowedUrl'][] = $url;
-    // }
+    foreach($ProfileAllowedUrls AS $url){
+       $_SESSION['allowedUrl'][] = $url;
+    }
 
     $validationResponse['ok'] = true;
     $validationResponse['msg'] = 'Wellcome '.$_SESSION['data']['name'];

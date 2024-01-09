@@ -1,8 +1,8 @@
 <?php
 
 /** destroy session */
-$sessionName = 'demo';
-session_name($sessionName . '_Session');
+$sessionName = 'SuperDuperSessionName';
+session_name($sessionName);
 session_start();
 $_SESSION = array();
 session_destroy();
