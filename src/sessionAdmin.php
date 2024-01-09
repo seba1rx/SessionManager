@@ -3,9 +3,13 @@
 namespace Seba1rx;
 
 /**
- * extend this class to customize it by overriding methods or use it as is
+ * extend this class to customize it by creating your own constructor
+ *
+ * this class is defined as abstract to force implementing a class extending this class to define a constructor
+ *
+ * there are no abstract methods in this class, but it is intended to be implemented with a custom constructor.
  */
-class SessionAdmin{
+abstract class SessionAdmin{
 
     const IP_REGEX = '/(\d{1,3}\.\d{1,3}\.\d{1,3}\.)(\d{1,3})/';
     protected $sessionLifetime = 2400;
