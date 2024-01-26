@@ -212,8 +212,11 @@ abstract class SessionAdmin{
      */
     private function checkIfUrlIsAllowed(): void
     {
+        $_SESSION['urlIsAllowedToLoad'] = FALSE;
+        $url_to_check = basename($_SERVER['PHP_SELF']);
         foreach($_SESSION['allowedUrl'] AS $allowed){
-            if(basename($_SERVER['PHP_SELF']) == $this->getSubStrAfter('/',$allowed)){
+            $url_to_compare_against = $this->getSubStrAfter('/',$allowed);
+            if($url_to_check == $url_to_compare_against){
                 $_SESSION['urlIsAllowedToLoad'] = TRUE;
                 break;
             }
