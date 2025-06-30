@@ -123,7 +123,7 @@ abstract class SessionAdmin{
      * updates the available session time
      * @return void
      */
-    private function setSessionTime(): void
+    protected function setSessionTime(): void
     {
         // refresh expire time of session
         if (isset($_COOKIE[$this->sessionName])){
@@ -143,7 +143,7 @@ abstract class SessionAdmin{
      * sets session time vars used to calculate whether request is obsolete
      * session always exists when this function is called
      */
-    private function setSessionTimeStamps(): void
+    protected function setSessionTimeStamps(): void
     {
         $time = time();
         $previous = time();
