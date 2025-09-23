@@ -70,9 +70,9 @@ abstract class SessionAdmin{
     /**
      * fn createUserSession:
      * adds user data to SESSION and sets time
-     * @param int $id_user
+     * @param mixed $id_user
      */
-    public function createUserSession(int $id_user): void
+    public function createUserSession(mixed $id_user): void
     {
         $this->uniqueId = base_convert(microtime(false), 10, 36);
 
@@ -323,3 +323,4 @@ abstract class SessionAdmin{
         }
     }
 }
+
