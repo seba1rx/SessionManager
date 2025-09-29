@@ -1,12 +1,9 @@
 # SessionManager
-Simple PHP session manager implementing security against hijicking
+Simple PHP session manager implementing security against hijacking
 
 Requires PHP 8
 
-install with `composer require seba1rx/sessionadmin:dev-master`
-
-if you get a message saying `Could not find a version of package seba1rx/sessionadmin matching your minimum-stability (stable).`
-then add `"minimum-stability": "dev"` to your composer.json file before installing
+install with `composer require seba1rx/sessionadmin`
 
 Usage:
 
@@ -25,10 +22,11 @@ This class can be useful in websites that have public content available but also
 Features:
 - Creates a session for guest and users
 - Named session
-- 3% chances of regenerating session id on each request
-- Prevents hijicking
-- Define allowed URL array for guests, that can be expanded when user logs in according to system profile
+- 3% chances of regenerating session id on each request to prevent session fixation
+- Prevents hijacking
 - session destruction on obsolete request
+- proxy-aware ip detection
+- Optional: Define allowed URL array for guests, that can be expanded when user logs in according to system profile
 
 
 ### Here are some screen caps:

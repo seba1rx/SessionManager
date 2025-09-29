@@ -1,10 +1,10 @@
 <?php
 
 /** destroy session */
-$sessionName = 'SuperDuperSessionName';
+$sessionName = 'MyCustomMPASessionName';
 session_name($sessionName);
 session_start();
-$_SESSION = array();
+$_SESSION = [];
 session_destroy();
 
 /** go to main page */
