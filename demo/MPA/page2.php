@@ -9,7 +9,7 @@
 <body>
     <div class="wrapper p-5">
         <div class="row mt-5 justify-content-center">
-            <div class="col-lg-8 col-sm-10 <?php echo ($_SESSION['urlIsAllowedToLoad'] ? 'bg-info' : 'bg-danger'); ?> text-center text-white">
+            <div class="col-lg-8 col-sm-10 <?php echo ($_SESSION['urlIsAllowedToLoad'] ?? true ? 'bg-info' : 'bg-danger'); ?> text-center text-white">
                 <h3>Public content, you are in page2.php</h3>
                 <p>Anyone can see this content, you are in page2.php</p>
 
@@ -52,32 +52,32 @@
                     </div>
                     <div class="col-6">
                         <h5>your session data:</h5>
-                        <pre><?php echo json_encode($_SESSION, JSON_PRETTY_PRINT) ?></pre>
+                        <pre><?php echo json_encode($_SESSION ?? [], JSON_PRETTY_PRINT) ?></pre>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         function tryToAuthenticate(event){
             event.preventDefault();
-
             $.ajax({
-                method: "POST",
-                url: "authentication.php",
-                dataType: 'json',
-                data: $('#loginForm').serializeArray()
-            }).done(function( validationResponse ) {
-                if(validationResponse.ok){
-                    alert(validationResponse.msg);
-                    /**
-                     * in a propper system, content would be updated here,
-                     * but for the sake of this demo, we will just reload
-                     */
-                    location.reload();
-                }else{
-                    alert(validationResponse.msg);
+                type: "POST",
+                url: "Authentication.php",
+                data: $('#loginForm').serializeArray(),
+                dataType: "json",
+                success: function(response) {
+                    if(response.ok){
+                        alert(response.msg);
+                        location.reload();
+                    }else{
+                        alert(response.msg);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error("Error:", textStatus, errorThrown);
+                    alert("sorry, something went wrong.");
                 }
             });
         };

@@ -2,5 +2,5 @@
 
 namespace Seba1rx;
 
-class SessionAdminException
+class SessionAdminException extends \Exception
 {}

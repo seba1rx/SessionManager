@@ -25,6 +25,7 @@ $conf["keys"] = [ // set other starting data that will be globally accessible di
 
 $sessionAdmin = new MyMPASessionAdmin($conf);
 $sessionAdmin->useAuthorization = true;
+$sessionAdmin->authorizationRouteOrFile = "Authentication.php";
 $sessionAdmin->ipOctetsToCheck = 2;
 $sessionAdmin->proxyAwareIpDetection = true;
 $sessionAdmin->activateSession();

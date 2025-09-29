@@ -23,6 +23,7 @@ abstract class SessionAdmin{
     public $proxyAwareIpDetection = true;
     public $ipOctetsToCheck = 2;
     public $useAuthorization = false;
+    public $authorizationRouteOrFile = "";
 
     /**
      * Extend this class and define a constructor, here you have a template:
@@ -226,6 +227,13 @@ abstract class SessionAdmin{
         if(empty($_SESSION['allowedUrl'])) throw new SessionAdminException("the allowedUrl key is empty");
         $_SESSION['urlIsAllowedToLoad'] = FALSE;
         $url_to_check = basename($_SERVER['PHP_SELF']);
+
+        error_log($this->authorizationRouteOrFile);
+        error_log($url_to_check);
+        if($this->authorizationRouteOrFile == $url_to_check){
+            error_log("ignore me");
+            return;
+        }
         foreach($_SESSION['allowedUrl'] AS $allowed){
             $url_to_compare_against = $this->getSubStrAfterLast($allowed, '/');
             if($url_to_check == $url_to_compare_against){
@@ -234,7 +242,8 @@ abstract class SessionAdmin{
             }
         }
         if(!$_SESSION['urlIsAllowedToLoad'] && $this->useAuthorization){
-            header('Location: index.php');
+            $this->redirectToIndex();
+            // header('Location: index.php');
         }
     }
 
@@ -445,6 +454,8 @@ abstract class SessionAdmin{
     /**
      * Redirects the current request to index.php.
      * Handles normal browser requests, XHR/fetch calls, and preserves original URI.
+     *
+     * * requires that the script request sender (e.g. jquery ajax) implements a handler to redirect to the intended page
      *
      * @return void
      */

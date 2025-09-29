@@ -7,7 +7,7 @@
 <body>
     <div class="wrapper p-5">
         <div class="row mt-5 justify-content-center">
-            <div class="col-lg-8 col-sm-10 <?php echo ($_SESSION['urlIsAllowedToLoad']? 'bg-info': 'bg-danger'); ?> text-center text-white">
+            <div class="col-lg-8 col-sm-10 <?php echo ($_SESSION['urlIsAllowedToLoad'] ?? true ? 'bg-info': 'bg-danger'); ?> text-center text-white">
                 <h3>Public content, you are in index.php</h3>
                 <p>Anyone can see this content, you are in index.php</p>
 
@@ -44,7 +44,7 @@
                     </div>
                     <div class="col-6">
                         <h5>your session data:</h5>
-                        <pre><?php echo json_encode($_SESSION, JSON_PRETTY_PRINT) ?></pre>
+                        <pre><?php echo json_encode($_SESSION ?? [], JSON_PRETTY_PRINT) ?></pre>
                     </div>
                 </div>
             </div>
