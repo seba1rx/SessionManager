@@ -1,6 +1,6 @@
 <?php
 
-namespace SPA\App;
+namespace App;
 
 class Authentication
 {

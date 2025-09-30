@@ -1,10 +1,10 @@
 <?php
 
-namespace SPA\APP;
+namespace App;
 
 class Response
 {
-    public static function respond(mixed $data): void
+    public static function send(mixed $data): void
     {
         $isXHR = !empty($_SERVER['HTTP_X_REQUESTED_WITH'])
                 && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';

@@ -1,13 +1,17 @@
 <?php
 
 return [
-    "POST" => [
-        "/login" => [SPA\App\Authentication::class, "login"],
-    ],
+
+    // all the GET routes will be echoed with a Content-Type: text/html header
     "GET" => [
-        "/" => [SPA\App\Controller::class, "start"],
-        "/hello" => [SPA\App\Controller::class, "hello"],
-        "/demoData" => [SPA\App\Controller::class, "demoData"],
+        "/" => [App\Controller::class, "start"],
+        "/hello" => [App\Controller::class, "hello"],
+        "/demoData" => [App\Controller::class, "demoData"],
+    ],
+    // any POST, PUT, DELETE route will be sent as a json with a Content-Type: application/json header
+    "POST" => [
+        "/login" => [App\Authentication::class, "login"],
+        "/data" => [App\Controller::class, "data"],
     ],
     "PUT" => [],
     "DELETE" => [],

@@ -1,12 +1,16 @@
 <?php
 
-namespace SPA\App;
+namespace App;
+
+use App\TemplateEngine;
 
 class Controller
 {
+
     public function start():string
     {
-        return "start";
+        $html = TemplateEngine::render(tpl_dir("main.php"));
+        return $html;
     }
 
     public function hello(): string

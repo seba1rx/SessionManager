@@ -1,6 +1,6 @@
 <?php
 
-namespace SPA\App;
+namespace App;
 
 use Seba1rx\SessionAdmin;
 
@@ -9,7 +9,7 @@ use Seba1rx\SessionAdmin;
  * so the SessionAdmin class is intended to be extended an implemented with
  * a custom constructor
  */
-class MyMPASessionAdmin extends SessionAdmin{
+class MySPASessionAdmin extends SessionAdmin{
 
     /**
      * Extend the SessionAdmin class by defining a custom constructor
@@ -25,7 +25,7 @@ class MyMPASessionAdmin extends SessionAdmin{
          * you will need to destroy it by using the name,
          * see exitp.php in the demo
          */
-        $this->sessionName = "MyCustomMPASessionName";
+        $this->sessionName = "MyCustomSPASessionName";
 
         /**
          * Optional:
