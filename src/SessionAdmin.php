@@ -23,7 +23,7 @@ abstract class SessionAdmin{
     public $proxyAwareIpDetection = true;
     public $ipOctetsToCheck = 2;
     public $useAuthorization = false;
-    public $authorizationRouteOrFile = "";
+    public $ignoreInAuthorization = [];
     public $app_is_spa = true;
 
     /**
@@ -63,7 +63,8 @@ abstract class SessionAdmin{
             $this->configureGuestSession();
         }
 
-        if($this->useAuthorization){
+        // only check url when app is MPA
+        if($this->useAuthorization && !$this->app_is_spa){
             $this->checkIfUrlIsAllowed();
         }
 
@@ -225,34 +226,25 @@ abstract class SessionAdmin{
      */
     private function checkIfUrlIsAllowed(): void
     {
+        if(empty($_SESSION['allowedUrl'])) throw new SessionAdminException("the allowedUrl key is empty");
+        $_SESSION['urlIsAllowedToLoad'] = FALSE;
+        $url_to_check = basename($_SERVER['PHP_SELF']);
 
-        // if the app is SPA then the routes are checked by the middleware
-        if($this->app_is_spa){
-            
-        }else{
-            if(empty($_SESSION['allowedUrl'])) throw new SessionAdminException("the allowedUrl key is empty");
-            $_SESSION['urlIsAllowedToLoad'] = FALSE;
-            $url_to_check = basename($_SERVER['PHP_SELF']);
-
-            error_log($this->authorizationRouteOrFile);
-            error_log($url_to_check);
-            if($this->authorizationRouteOrFile == $url_to_check){
-                error_log("ignore me");
-                return;
-            }
-            foreach($_SESSION['allowedUrl'] AS $allowed){
-                $url_to_compare_against = $this->getSubStrAfterLast($allowed, '/');
-                if($url_to_check == $url_to_compare_against){
-                    $_SESSION['urlIsAllowedToLoad'] = TRUE;
-                    break;
-                }
-            }
-            if(!$_SESSION['urlIsAllowedToLoad'] && $this->useAuthorization){
-                $this->redirectToIndex();
-                // header('Location: index.php');
-            }
+        if(in_array($url_to_check, $this->ignoreInAuthorization)){
+            return;
         }
 
+        foreach($_SESSION['allowedUrl'] AS $allowed){
+            $url_to_compare_against = $this->getSubStrAfterLast($allowed, '/');
+            if($url_to_check == $url_to_compare_against){
+                $_SESSION['urlIsAllowedToLoad'] = TRUE;
+                break;
+            }
+        }
+        if(!$_SESSION['urlIsAllowedToLoad'] && $this->useAuthorization){
+            $this->redirectToIndex();
+            // header('Location: index.php');
+        }
     }
 
     /**

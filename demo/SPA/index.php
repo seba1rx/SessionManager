@@ -18,7 +18,7 @@ $routes = require __DIR__."/config/routes.php";
 include __DIR__."/config/session.php";
 
 /**
- * Global scoped function
+ * Globally scoped function
  * @return string
  */
 function tpl_dir($tpl): string
@@ -27,7 +27,7 @@ function tpl_dir($tpl): string
 }
 
 /**
- * Global scoped function
+ * Globally scoped function
  */
 function sessionAdmin(): MySPASessionAdmin
 {

@@ -11,8 +11,6 @@ $conf["keys"] = [ // set other starting data that will be globally accessible di
 
 $spa_sessionAdmin = new MySPASessionAdmin($conf);
 $spa_sessionAdmin->useAuthorization = true;
-$spa_sessionAdmin->authorizationRouteOrFile = "Authentication.php";
 $spa_sessionAdmin->ipOctetsToCheck = 2;
 $spa_sessionAdmin->proxyAwareIpDetection = true;
 $spa_sessionAdmin->activateSession();
-
