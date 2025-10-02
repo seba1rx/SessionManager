@@ -17,9 +17,6 @@ class Router
         $method = $_SERVER['REQUEST_METHOD'];
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-        error_log($method);
-        error_log($uri);
-
         // Match route
         if (isset($this->routes[$method][$uri])) {
             [$class, $action] = $this->routes[$method][$uri];

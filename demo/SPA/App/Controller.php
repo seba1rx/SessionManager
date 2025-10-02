@@ -6,6 +6,12 @@ use App\TemplateEngine;
 
 class Controller
 {
+    private $response;
+
+    public function __construct()
+    {
+        $this->response = new \stdClass;
+    }
 
     public function start():string
     {
@@ -13,9 +19,10 @@ class Controller
         return $html;
     }
 
-    public function hello(): string
+    public function hello(): object
     {
-        return "hello";
+        $this->response->dialog = "Hello from backend!";
+        return $this->response;
     }
 
     public function demoData(): object
@@ -24,6 +31,9 @@ class Controller
         $data->foo = "foo";
         $data->bar = "bar";
         $data->baz = "baz";
-        return $data;
+
+        $this->response->dialog = json_encode($data);
+
+        return $this->response;
     }
 }

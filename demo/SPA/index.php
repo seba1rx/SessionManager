@@ -23,7 +23,7 @@ include __DIR__."/config/session.php";
  */
 function tpl_dir($tpl): string
 {
-    return __DIR__."/App/tpl/".$tpl;
+    return __DIR__."/tpl/".$tpl;
 }
 
 /**

@@ -2,14 +2,13 @@
 
 return [
 
-    // response to any request to GET routes will be echoed with a Content-Type: text/html header
     "GET" => [
         "/" => [App\Controller::class, "start"],
+        "/private" => [App\Controller::class, "private"],
+    ],
+    "POST" => [
         "/hello" => [App\Controller::class, "hello"],
         "/demoData" => [App\Controller::class, "demoData"],
-    ],
-    // response to any request to POST, PUT, DELETE route will be sent as a json with a Content-Type: application/json header
-    "POST" => [
         "/login" => [App\Authentication::class, "login"],
         "/data" => [App\Controller::class, "data"],
     ],
