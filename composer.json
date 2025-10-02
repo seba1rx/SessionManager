@@ -16,10 +16,10 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "php -r \"copy('vendor/seba1rx/script/seba1rx_sessionAdmin.js', 'seba1rx_sessionAdmin.js');\""
+            "@php -r \"copy(__DIR__ . '/script/seba1rx_sessionAdmin.js', getcwd() . '/seba1rx_sessionAdmin.js');\""
         ],
         "post-update-cmd": [
-            "php -r \"copy('vendor/seba1rx/script/seba1rx_sessionAdmin.js', 'seba1rx_sessionAdmin.js');\""
+            "@php -r \"copy(__DIR__ . '/script/seba1rx_sessionAdmin.js', getcwd() . '/seba1rx_sessionAdmin.js');\""
         ]
     }
 }
