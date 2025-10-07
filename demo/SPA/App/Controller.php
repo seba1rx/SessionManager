@@ -36,4 +36,34 @@ class Controller
 
         return $this->response;
     }
+
+    public function showLogin(): object
+    {
+        $content = TemplateEngine::render(tpl_dir("form.php"));
+        $html = new \stdClass;
+        $html->id = "content";
+        $html->content = $content;
+
+        $this->response->html = $html;
+        return $this->response;
+    }
+
+    public function reloadSessionData(): object
+    {
+        $content = json_encode($_SESSION ?? [], JSON_PRETTY_PRINT);
+
+        $html = new \stdClass;
+        $html->id = "session_data";
+        $html->content = $content;
+
+        $this->response->html = $html;
+        return $this->response;
+    }
+
+    public function logout(): object
+    {
+        sessionAdmin()->terminate();
+        return $this->response;
+    }
+
 }

@@ -25,22 +25,21 @@
                         <p>Click on each route to check this app working</p>
                         <dd>
                             <li style="cursor: pointer;"><span onclick="App.redirect('/')">Start</span></li>
-                            <li style="cursor: pointer;"><span onclick="App.redirect('/private')">Private</span></li>
                             <li style="cursor: pointer;"><span onclick="App.request.post({url:'/hello'})">Hello</span></li>
                             <li style="cursor: pointer;"><span onclick="App.request.post({url:'/demoData'})">Demo data</span></li>
-                            <li style="cursor: pointer;"><span onclick="App.request.post({url:'/prepareLogin'})">Show login form</span></li>
+                            <li style="cursor: pointer;"><span onclick="App.request.post({url:'/showLogin'})">Show login form</span></li>
                         </dd>
 
                         <br>
 
                         <?php if($_SESSION['isUser'] ?? false){ ?>
-                            <a href="exit.php" class="btn btn-success mt-2">Log out</a>
+                            <button type="button" onclick="App.request.post({url:'/logout'})" class="btn btn-success mt-2">Log out</a>
                         <?php } ?>
 
                     </div>
                     <div class="col-6">
                         <h5>your session data:</h5>
-                        <pre><?php echo json_encode($_SESSION ?? [], JSON_PRETTY_PRINT) ?></pre>
+                        <pre id="session_data"><?php echo json_encode($_SESSION ?? [], JSON_PRETTY_PRINT) ?></pre>
                     </div>
                 </div>
             </div>
@@ -52,7 +51,52 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        /**
+         * gets the values from a form
+         *
+         * @param {string} formId - ID del formulario
+         * @returns {object} - Objeto con pares { id: valor }
+         */
+        function getFormDataById(formId) {
+            const form = document.getElementById(formId);
+            if (!form) {
+                console.error(`Form id "${formId}" not found`);
+                return {};
+            }
+
+            const data = {};
+
+            // select all items with attribute "name" in the form
+            form.querySelectorAll('input, select, textarea').forEach(el => {
+                if (!el.name) return; // ignore those without name
+
+                if (el.type === 'checkbox') {
+                    data[el.name] = el.checked;
+                } else if (el.type === 'radio') {
+                    // just keep selected
+                    if (el.checked) data[el.name] = el.value;
+                } else {
+                    data[el.name] = el.value;
+                }
+            });
+
+            console.log(data);
+            return data;
+        }
+
+
         const App = {
+            /**
+             * Get all the form values in an indexed array
+             *
+             * usage: var data = App.getData('form_id');
+             *
+             * @param {String} form_id
+             * @returns
+             */
+            getData: (form_id) => {
+                return getFormDataById(form_id);
+            },
             request: {
                 get: (args)=>{App.send('GET',args);},
                 post: (args)=>{App.send('POST',args);},
@@ -113,8 +157,36 @@
                 if(response.error){
                     swal.fire({icon: "error", text: response.error});
                 }
+                if(response.auth){
+                    if(response.ok){
+                        swal.fire({
+                            icon: "success",
+                            title: "Logged in!",
+                            html: response.auth.msg,
+                            confirmButtonText: "Hooray!",
+                        }).then((result) => {
+                            App.request.post({url:'/reloadSessionData'});
+                        });
+
+                    }else{
+                        swal.fire({html: response.auth.msg});
+                    }
+                }
                 if(response.html){
-                    document.getElementById(response.html.id).innerHTML = response.html.content;
+                    container = document.getElementById(response.html.id);
+                    container.innerHTML = response.html.content;
+                    const scripts = container.querySelectorAll('script');
+                    scripts.forEach(oldScript => {
+                        const newScript = document.createElement('script');
+                        for (const attr of oldScript.attributes) {
+                            newScript.setAttribute(attr.name, attr.value);
+                        }
+                        if (!oldScript.src) {
+                            newScript.text = oldScript.textContent;
+                        }
+                        document.body.appendChild(newScript);
+                        newScript.remove();
+                    });
                 }
                 if(response.dialog){
                     swal.fire({html: response.dialog});

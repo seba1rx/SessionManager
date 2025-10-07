@@ -52,7 +52,7 @@ if(
     ];
 
     /**
-     * here you woud iterate to add allowed urls according to assigned profile
+     * here you would iterate to add allowed urls according to assigned profile
      */
     foreach($ProfileAllowedUrls AS $url){
        $_SESSION['allowedUrl'][] = $url;

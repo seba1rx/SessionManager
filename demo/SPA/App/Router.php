@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Request;
+
 class Router
 {
     private $routes;
@@ -23,7 +25,7 @@ class Router
 
             if (class_exists($class) && method_exists($class, $action)) {
                 $controller = new $class();
-                return $controller->$action();
+                return $controller->$action(new Request);
             } else {
                 http_response_code(500);
                 echo "Controller or method not found: {$class}::{$action}";
@@ -33,6 +35,6 @@ class Router
 
         // If not matched
         http_response_code(404);
-        echo "404 Not Found: {$method} {$uri}";
+        echo "404 Not Found: {$method} {$uri}" . PHP_EOL;
     }
 }

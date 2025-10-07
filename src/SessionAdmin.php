@@ -440,12 +440,11 @@ abstract class SessionAdmin{
      *
      * @return void
      */
-    private function terminate(): void
+    public function terminate(): void
     {
         /** destroy session */
         $_SESSION = [];
-        session_write_close();
-        session_destroy();
+        $this->destroySession();
 
         /** go to safe page */
         $this->redirectToIndex();
